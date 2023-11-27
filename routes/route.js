@@ -24,25 +24,27 @@ function tokenVerify(req,res,next){
 router.post('/login',async (req, res) => {
   try {
     const { email, password } = req.body;
-        const adminEmail = 'admin@gmail.com';
-        const adminPass = 'admin123';
-
-    if (email === adminEmail && password === adminPass){
-      const plAdmin = { email: adminEmail };
-      const token = jwt.sign(plAdmin, 'regapp');
-      res.status(200).json({ message: 'Login Success', token });
-    } else {
-      const Ufound = await regData.findOne({ email, password });
-      if (Ufound) {
+    const Ufound = await regData.findOne({ email, password });
+    if(Ufound){
+      var checkElig = String(Ufound.isElig)  
+      var adminCheck = String(Ufound.isAdmin)
+      if (adminCheck==="true"){
+        const plAdmin = { email: email };
+        const token = jwt.sign(plAdmin, 'regapp');
+        res.status(200).json({ message: 'success-admin', token });
+      } else if(checkElig==="true") {
         let pl ={ email:email, password:password };
         let token = jwt.sign(pl,'regapp');  
         var userName = Ufound.name        
         var regStatus = String(Ufound.regComp)     
-        res.status(200).send({message:'Login Success', token:token, userName:userName, regStatus:regStatus });
-      } else {
-         res.status(401).send(new Error('Invalid credentials.'));
+        res.status(200).send({message:'success-user', token:token, userName:userName, regStatus:regStatus });
+      } else if(checkElig==="false") {
+        res.status(401).send(new Error('ineligible-login'));
       }
+    }else{
+      res.status(404).send(new Error('not-found'));
     }
+
   } catch (error) {
      console.error('Login Error:', error);
      res.status(500).send(error);
