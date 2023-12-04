@@ -3,6 +3,7 @@ const mongoose=require('mongoose');
 const cors = require('cors');
 const path=require('path');
 const userRouter=require('./routes/route.js');
+const adminRouter=require('./routes/admin.js');
 require('dotenv').config();
 
 const app= express();
@@ -22,6 +23,7 @@ mongoose.connect(mongoUrl)
 
 app.get("/",(req,res)=>{res.sendFile(path.join(__dirname,"frontend","build","index.html"));});
 app.use('/user',userRouter);  
+app.use('/admin',adminRouter);  
 
 const PORT = process.env.PORT;
 app.listen(PORT,()=>{

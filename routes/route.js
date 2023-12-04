@@ -1,6 +1,8 @@
 const express = require('express');
+const multer = require('multer');
 const regData = require('../model/student');
 const collectedData = require('../model/collectedData');
+const sendMail = require('./admin.js')
 const router = express.Router()
 const jwt = require('jsonwebtoken');
 router.use(express.urlencoded({ extended: true }));
@@ -9,11 +11,10 @@ router.use(express.json());
 function tokenVerify(req,res,next){
   try{
     const token= req.headers.token;
-    
     if(!token) throw new Error('Unauthorized');
     let pl=jwt.verify(token,'regapp');
-
-    if(!pl) throw new Error('Unauthorized');
+    let plAdmin=jwt.verify(token,'regapp');
+    if(!pl && !plAdmin) throw new Error('Unauthorized');
     next();
 
   }catch(error){
@@ -29,9 +30,9 @@ router.post('/login',async (req, res) => {
       var checkElig = String(Ufound.isElig)  
       var adminCheck = String(Ufound.isAdmin)
       if (adminCheck==="true"){
-        const plAdmin = { email: email };
+        const plAdmin = { email: email, password:password };
         const token = jwt.sign(plAdmin, 'regapp');
-        res.status(200).json({ message: 'success-admin', token });
+        res.status(200).send({ message: 'success-admin', token:token });
       } else if(checkElig==="true") {
         let pl ={ email:email, password:password };
         let token = jwt.sign(pl,'regapp');  
@@ -44,13 +45,11 @@ router.post('/login',async (req, res) => {
     }else{
       res.status(404).send(new Error('not-found'));
     }
-
   } catch (error) {
      console.error('Login Error:', error);
      res.status(500).send(error);
   } 
 });
-
 
 router.put('/regupdate/:name',tokenVerify,async (req, res) => {
     try {      
@@ -92,7 +91,5 @@ router.post('/batch/:batch', tokenVerify, async (req, res) => {
     res.send(data)
   })
 });
-
-
 
 module.exports=router;
