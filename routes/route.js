@@ -2,7 +2,6 @@ const express = require('express');
 const multer = require('multer');
 const regData = require('../model/student');
 const collectedData = require('../model/collectedData');
-const sendMail = require('./admin.js')
 const router = express.Router()
 const jwt = require('jsonwebtoken');
 router.use(express.urlencoded({ extended: true }));
@@ -84,12 +83,5 @@ router.post('/upload',tokenVerify,async (req, res) => {
       res.status(400).json({message: error.message})
   }
 })
-
-router.post('/batch/:batch', tokenVerify, async (req, res) => {
-  let batch = req.params.batch;
-  let batchList = await collectedData.find({batch:batch}).then((data)=>{
-    res.send(data)
-  })
-});
 
 module.exports=router;
