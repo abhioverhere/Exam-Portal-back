@@ -21,6 +21,7 @@ mongoose.connect(mongoUrl)
     console.error("Error connecting to ExamDB:", error);
   });
 
+//Setting basic backend API routes
 app.get("/",(req,res)=>{res.sendFile(path.join(__dirname,"frontend","build","index.html"));});
 app.use('/user',userRouter);  
 app.use('/admin',adminRouter);  

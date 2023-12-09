@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 router.use(express.urlencoded({ extended: true }));
 router.use(express.json());
 
+//Function to verify userToken
 function tokenVerify(req,res,next){
   try{
     const token= req.headers.token;
@@ -15,19 +16,19 @@ function tokenVerify(req,res,next){
     let plAdmin=jwt.verify(token,'regapp');
     if(!pl && !plAdmin) throw new Error('Unauthorized');
     next();
-
   }catch(error){
     res.status(401).send(error);
   }
 }
 
+//Checking Login data from DB and allocating token
 router.post('/login',async (req, res) => {
   try {
     const { email, password } = req.body;
     const Ufound = await regData.findOne({ email, password });
     if(Ufound){
-      var checkElig = String(Ufound.isElig)  
-      var adminCheck = String(Ufound.isAdmin)
+      var checkElig = String(Ufound.isElig) //Checks eligibility for login 
+      var adminCheck = String(Ufound.isAdmin) //Checks if the client is an Admin 
       if (adminCheck==="true"){
         const plAdmin = { email: email, password:password };
         const token = jwt.sign(plAdmin, 'regapp');
@@ -50,6 +51,7 @@ router.post('/login',async (req, res) => {
   } 
 });
 
+//Code to update the registration status of a user
 router.put('/regupdate/:name',tokenVerify,async (req, res) => {
     try {      
       const userInfo = req.params.name
@@ -64,6 +66,7 @@ router.put('/regupdate/:name',tokenVerify,async (req, res) => {
     }
 })
 
+//Code to collect the details of the user to Database
 router.post('/upload',tokenVerify,async (req, res) => {
   const data = new collectedData({
       firstName: req.body.firstName,

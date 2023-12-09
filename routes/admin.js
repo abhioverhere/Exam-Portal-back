@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 router.use(express.urlencoded({ extended: true }));
 router.use(express.json());
 
+//Function to verify adminToken
 function tokenVerify(req,res,next){
   try{
     const token= req.headers.token;
@@ -16,12 +17,12 @@ function tokenVerify(req,res,next){
     let plAdmin=jwt.verify(token,'regapp');
     if(!pl && !plAdmin) throw new Error('Unauthorized');
     next();
-
   }catch(error){
     res.status(401).send(error);
   }
 }
 
+//Function to clear a specific directory upon which it gets called
 const clearDir =(directory)=>{
   fs.readdir(directory,(err,files)=>{
     if (err) throw err;
@@ -33,6 +34,7 @@ const clearDir =(directory)=>{
   })
 }
 
+//Setting up Nodemailer
 const nodeM= require('nodemailer');
 const send= nodeM.createTransport({
     service: 'gmail',
@@ -41,6 +43,7 @@ const send= nodeM.createTransport({
         pass: 'taol hrda mqwe vhoo'
 }}) 
 
+//Request to recieve data based on the batch clicked
 router.post('/batch/:batch', tokenVerify, async (req, res) => {
   let batch = req.params.batch;
   let batchList = await collectedData.find({batch:batch}).then((data)=>{
@@ -48,6 +51,7 @@ router.post('/batch/:batch', tokenVerify, async (req, res) => {
   })
 });
 
+//Multer integration and E-Mail writing
 const uploads = multer({dest:__dirname + "/uploads"})
 router.post('/result', tokenVerify,uploads.array("file"),(req, res)=>{
   const mailData= req.body;
