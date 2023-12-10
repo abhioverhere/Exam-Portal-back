@@ -1,5 +1,4 @@
 const express = require('express');
-const multer = require('multer');
 const regData = require('../model/student');
 const collectedData = require('../model/collectedData');
 const router = express.Router()
@@ -25,7 +24,9 @@ function tokenVerify(req,res,next){
 router.post('/login',async (req, res) => {
   try {
     const { email, password } = req.body;
-    const Ufound = await regData.findOne({ email, password });
+    const Ufound = await regData.findOne({ email, password });     
+    const userCheck = await regData.findOne({ email });     
+    const passCheck = await regData.findOne({ password });     
     if(Ufound){
       var checkElig = String(Ufound.isElig) //Checks eligibility for login 
       var adminCheck = String(Ufound.isAdmin) //Checks if the client is an Admin 
@@ -38,12 +39,17 @@ router.post('/login',async (req, res) => {
         let token = jwt.sign(pl,'regapp');  
         var userName = Ufound.name        
         var regStatus = String(Ufound.regComp)     
-        res.status(200).send({message:'success-user', token:token, userName:userName, regStatus:regStatus });
+        var eligStatus = String(Ufound.isElig)     
+        res.status(200).send({message:'success-user', token:token, userName:userName, regStatus:regStatus, eligStatus:eligStatus });
       } else if(checkElig==="false") {
-        res.status(401).send(new Error('ineligible-login'));
+        res.status(401).send({error:'ineligible-login'});
       }
+    }else if(!userCheck){
+      res.status(404).send({error:'user-404'});   
+    }else if(!passCheck){
+      res.status(404).send({error:'wrong-pass'});       
     }else{
-      res.status(404).send(new Error('not-found'));
+      res.status(404).send({error:'not-found'});
     }
   } catch (error) {
      console.error('Login Error:', error);

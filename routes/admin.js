@@ -4,6 +4,7 @@ const fs=require('fs');
 const path = require('path')
 const router = express.Router()
 const collectedData = require('../model/collectedData');
+const regData = require('../model/student');
 const jwt = require('jsonwebtoken');
 router.use(express.urlencoded({ extended: true }));
 router.use(express.json());
@@ -51,6 +52,18 @@ router.post('/batch/:batch', tokenVerify, async (req, res) => {
   })
 });
 
+router.post('/othdata/inelig', tokenVerify, async (req, res) => {
+  let ineligList = await regData.find({isElig:false, isAdmin:false}).then((data)=>{
+    res.send(data)
+  })
+});
+
+router.post('/othdata/unreg', tokenVerify, async (req, res) => {
+  let unregList = await regData.find({isElig:true, regComp:false, isAdmin:false}).then((data)=>{
+    res.send(data)
+  })
+});
+
 //Multer integration and E-Mail writing
 const uploads = multer({dest:__dirname + "/uploads"})
 router.post('/result', tokenVerify,uploads.array("file"),(req, res)=>{
@@ -83,5 +96,31 @@ router.post('/result', tokenVerify,uploads.array("file"),(req, res)=>{
   }
 })
 })
+
+router.post('/deets', tokenVerify, async (req, res) => {
+  const regCount = await regData.countDocuments({regComp:true})
+  const unregCount = await regData.countDocuments({regComp:false, isElig:true})
+  const ineligCount = await regData.countDocuments({isElig:false})
+  const maxCount = await regData.countDocuments({isAdmin:false})
+
+  const countCSA= await collectedData.countDocuments({batch:'CSA'})
+  const countDSA= await collectedData.countDocuments({batch:'DSA'})
+  const countFSD= await collectedData.countDocuments({batch:'FSD'})
+  const countST= await collectedData.countDocuments({batch:'ST'})
+  const countMLAI= await collectedData.countDocuments({batch:'ML-AI'})
+  // const countDM= await collectedData.countDocuments({batch:'DM'})
+
+  res.json({
+    regCount:regCount, 
+    maxCount:maxCount, 
+    unregCount:unregCount, 
+    ineligCount:ineligCount, 
+    countCSA:countCSA, 
+    countDSA:countDSA, 
+    countMLAI:countMLAI, 
+    countFSD:countFSD, 
+    countST:countST
+  })})
+
 
 module.exports=router;
