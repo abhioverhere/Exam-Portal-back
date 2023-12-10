@@ -108,7 +108,7 @@ router.post('/deets', tokenVerify, async (req, res) => {
   const countFSD= await collectedData.countDocuments({batch:'FSD'})
   const countST= await collectedData.countDocuments({batch:'ST'})
   const countMLAI= await collectedData.countDocuments({batch:'ML-AI'})
-  // const countDM= await collectedData.countDocuments({batch:'DM'})
+  const countDM= await collectedData.countDocuments({batch:'DM'})
 
   res.json({
     regCount:regCount, 
@@ -119,7 +119,8 @@ router.post('/deets', tokenVerify, async (req, res) => {
     countDSA:countDSA, 
     countMLAI:countMLAI, 
     countFSD:countFSD, 
-    countST:countST
+    countST:countST,
+    countDM:countDM,
   })})
 
 

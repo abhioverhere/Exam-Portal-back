@@ -4,9 +4,9 @@
   "description": "Exit Test Portal for ICT Academy",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node server.js"
   },
-  "author": "Abhilash P, Dhanya P, Athul Krishnan",
+  "author": "Abhilash P, Athul Krishnan",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
