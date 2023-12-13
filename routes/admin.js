@@ -1,6 +1,6 @@
 const express = require('express');
-// const multer = require('multer');
-// const fs=require('fs');
+const multer = require('multer');
+const fs=require('fs');
 const path = require('path')
 const router = express.Router()
 const collectedData = require('../model/collectedData');
@@ -24,25 +24,25 @@ function tokenVerify(req,res,next){
 }
 
 // Function to clear a specific directory upon which it gets called
-// const clearDir =(directory)=>{
-//   fs.readdir(directory,(err,files)=>{
-//     if (err) throw err;
-//     for (const file of files){
-//       fs.unlink(path.join(directory,file),err=>{
-//         if (err) throw err; 
-//       })
-//     }
-//   })
-// }
+const clearDir =(directory)=>{
+  fs.readdir(directory,(err,files)=>{
+    if (err) throw err;
+    for (const file of files){
+      fs.unlink(path.join(directory,file),err=>{
+        if (err) throw err; 
+      })
+    }
+  })
+}
 
-//Setting up Nodemailer
-// const nodeM= require('nodemailer');
-// const send= nodeM.createTransport({
-//     service: 'gmail',
-//     auth:{
-//         user: 'ottomailertest@gmail.com',
-//         pass: 'taol hrda mqwe vhoo'
-// }}) 
+// Setting up Nodemailer
+const nodeM= require('nodemailer');
+const send= nodeM.createTransport({
+    service: 'gmail',
+    auth:{
+        user: 'ottomailertest@gmail.com',
+        pass: 'taol hrda mqwe vhoo'
+}}) 
 
 // Request to recieve data based on the batch clicked
 router.post('/batch/:batch', tokenVerify, async (req, res) => {
