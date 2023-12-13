@@ -7,7 +7,7 @@ const adminRouter=require('./routes/admin.js');
 require('dotenv').config();
 
 const app= express();
-app.use(express.static(path.join(__dirname,"/build")));
+app.use(express.static(path.join(__dirname,"frontend","build")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
@@ -20,13 +20,13 @@ mongoose.connect(mongoUrl)
   .catch((error) => {
     console.error("Error connecting to ExamDB:", error);
   });
-  
-  //Setting basic backend API routes
-app.get('*', function( _, res) {res.sendFile(path.join(__dirname ,'./build/index.html')); }); 
-app.use('/api/user',userRouter);  
-app.use('/api/admin',adminRouter);  
 
-const PORT = process.env.PORT || 4000;
+//Setting basic backend API routes
+app.get("/",(req,res)=>{res.sendFile(path.join(__dirname,"frontend","build","index.html"));});
+app.use('/user',userRouter);  
+app.use('/admin',adminRouter);  
+
+const PORT = process.env.PORT;
 app.listen(PORT,()=>{
     console.log(`Server is running on PORT ${PORT}`);
 })
