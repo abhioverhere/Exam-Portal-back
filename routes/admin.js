@@ -45,24 +45,24 @@ function tokenVerify(req,res,next){
 // }}) 
 
 // Request to recieve data based on the batch clicked
-// router.post('/batch/:batch', tokenVerify, async (req, res) => {
-//   let batch = req.params.batch;
-//   let batchList = await collectedData.find({batch:batch}).then((data)=>{
-//     res.send(data)
-//   })
-// });
+router.post('/batch/:batch', tokenVerify, async (req, res) => {
+  let batch = req.params.batch;
+  let batchList = await collectedData.find({batch:batch}).then((data)=>{
+    res.send(data)
+  })
+});
 
-// router.post('/othdata/inelig', tokenVerify, async (req, res) => {
-//   let ineligList = await regData.find({isElig:false, isAdmin:false}).then((data)=>{
-//     res.send(data)
-//   })
-// });
+router.post('/othdata/inelig', tokenVerify, async (req, res) => {
+  let ineligList = await regData.find({isElig:false, isAdmin:false}).then((data)=>{
+    res.send(data)
+  })
+});
 
-// router.post('/othdata/unreg', tokenVerify, async (req, res) => {
-//   let unregList = await regData.find({isElig:true, regComp:false, isAdmin:false}).then((data)=>{
-//     res.send(data)
-//   })
-// });
+router.post('/othdata/unreg', tokenVerify, async (req, res) => {
+  let unregList = await regData.find({isElig:true, regComp:false, isAdmin:false}).then((data)=>{
+    res.send(data)
+  })
+});
 
 // Multer integration and E-Mail writing
 // const uploads = multer({dest:__dirname + "/uploads"})
