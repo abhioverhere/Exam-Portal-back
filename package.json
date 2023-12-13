@@ -4,7 +4,6 @@
   "description": "Exit Test Portal for ICT Academy",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
   },
   "author": "Abhilash P, Athul Krishnan",
   "license": "ISC",
