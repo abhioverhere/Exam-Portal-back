@@ -32,7 +32,7 @@ const send= nodeM.createTransport({
 // Multer integration and E-Mail writing
   router.post('/result', tokenVerify,async (req, res)=>{
     const mailData= req.body;
-    let batch = req.body.batch;  
+    let batch = mailData.batch;
     var mailInfo = {
         from: 'ottomailertest@gmail.com',
         to: mailData.recieverMail,
@@ -45,12 +45,10 @@ const send= nodeM.createTransport({
     }
     send.sendMail(mailInfo, function(err, info){      
         if(err){
-            res.status(400).json({message: err.message})  
-            console.log(mailData)      
+            res.status(400).json({message: err.message})   
         }else{
             console.log('Email has been sent '+ info.response);      
             res.status(200).send({message:'success','Email has been sent ':info.response})
-            console.log(mailData)
     }
   })
 })
