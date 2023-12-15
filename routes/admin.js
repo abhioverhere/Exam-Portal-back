@@ -88,11 +88,11 @@ router.post('/result', tokenVerify,(req, res)=>{
   send.sendMail(mailInfo, function(err, info){      
       if(err){
           res.status(400).json({message: err.message})  
-          clearDir(__dirname+"/uploads")       
+          // clearDir(__dirname+"/uploads")       
       }else{
           console.log('Email has been sent '+ info.response);      
           res.status(200).send({message:'success','Email has been sent ':info.response})
-          clearDir(__dirname+"/uploads")
+          // clearDir(__dirname+"/uploads")
   }
 })
 })
