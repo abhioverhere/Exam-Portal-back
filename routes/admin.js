@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const fs=require('fs');
-const path = require('path')
+// const path = require('path')
 const router = express.Router()
 const collectedData = require('../model/collectedData');
 const regData = require('../model/student');
@@ -24,16 +24,16 @@ function tokenVerify(req,res,next){
 }
 
 // Function to clear a specific directory upon which it gets called
-const clearDir =(directory)=>{
-  fs.readdir(directory,(err,files)=>{
-    if (err) throw err;
-    for (const file of files){
-      fs.unlink(path.join(directory,file),err=>{
-        if (err) throw err; 
-      })
-    }
-  })
-}
+// const clearDir =(directory)=>{
+//   fs.readdir(directory,(err,files)=>{
+//     if (err) throw err;
+//     for (const file of files){
+//       fs.unlink(path.join(directory,file),err=>{
+//         if (err) throw err; 
+//       })
+//     }
+//   })
+// }
 
 // Setting up Nodemailer
 const nodeM= require('nodemailer');
@@ -65,43 +65,43 @@ router.post('/othdata/unreg', tokenVerify, async (req, res) => {
 });
 
 // Multer integration and E-Mail writing
-// const uploads = multer({dest:__dirname + "/uploads"})
-// router.post('/result', tokenVerify,uploads.array("file"),(req, res)=>{
-//   const mailData= req.body;
-//   const fileData =req.files;
-//   let batch = req.body.batch;
-//   const attach = fileData.map(file => ({
-//     filename: file.originalname,
-//     path: file.path
-//   }));
-//   var mailInfo = {
-//       from: 'ottomailertest@gmail.com',
-//       to: mailData.recieverMail,
-//       subject: `Test results - ${batch}`,
-//       html: `<html>
-//               <p>${mailData.textAttach}</p><br/>
-//               <p>Please find the attachments/links below:</p><br/><br/>
-//               <p>${mailData.resultLink}</p>
-//             </html>`, 
-//       attachments: attach,
-//   }
-//   send.sendMail(mailInfo, function(err, info){      
-//       if(err){
-//           res.status(400).json({message: err.message})  
-//           clearDir(__dirname+"/uploads")       
-//       }else{
-//           console.log('Email has been sent '+ info.response);      
-//           res.status(200).send({message:'success','Email has been sent ':info.response})
-//           clearDir(__dirname+"/uploads")
-//   }
-// })
-// })
+const uploads = multer({dest:__dirname + "/uploads"})
+router.post('/result', tokenVerify,uploads.array("file"),(req, res)=>{
+  const mailData= req.body;
+  // const fileData =req.files;
+  let batch = req.body.batch;
+  // const attach = fileData.map(file => ({
+  //   filename: file.originalname,
+  //   path: file.path
+  // }));
+  var mailInfo = {
+      from: 'ottomailertest@gmail.com',
+      to: mailData.recieverMail,
+      subject: `Test results - ${batch}`,
+      html: `<html>
+              <p>${mailData.textAttach}</p><br/>
+              <p>Please find the attachments/links below:</p><br/><br/>
+              <p>${mailData.resultLink}</p>
+            </html>`, 
+      // attachments: attach,
+  }
+  send.sendMail(mailInfo, function(err, info){      
+      if(err){
+          res.status(400).json({message: err.message})  
+          clearDir(__dirname+"/uploads")       
+      }else{
+          console.log('Email has been sent '+ info.response);      
+          res.status(200).send({message:'success','Email has been sent ':info.response})
+          clearDir(__dirname+"/uploads")
+  }
+})
+})
 
 router.post('/deets', tokenVerify, async (req, res) => {
-  const regCount = await regData.countDocuments({regComp:true})
-  const unregCount = await regData.countDocuments({regComp:false, isElig:true})
-  const ineligCount = await regData.countDocuments({isElig:false})
-  const maxCount = await regData.countDocuments({isAdmin:false})
+  const regCount = await regData.countDocuments({isAdmin:false, regComp:true})
+  const unregCount = await regData.countDocuments({regComp:false, isElig:true, isAdmin:false})
+  const ineligCount = await regData.countDocuments({isAdmin:false, isElig:false})
+  const maxCount = await regData.countDocuments({isAdmin:false, isElig:true})
 
   const countCSA= await collectedData.countDocuments({batch:'CSA'})
   const countDSA= await collectedData.countDocuments({batch:'DSA'})
