@@ -83,16 +83,13 @@ router.post('/result', tokenVerify,(req, res)=>{
               <p>Please find the attachments/links below:</p><br/><br/>
               <p>${mailData.resultLink}</p>
             </html>`, 
-      // attachments: attach,
   }
   send.sendMail(mailInfo, function(err, info){      
       if(err){
-          res.status(400).json({message: err.message})  
-          // clearDir(__dirname+"/uploads")       
+          res.status(400).json({message: err.message})      
       }else{
           console.log('Email has been sent '+ info.response);      
           res.status(200).send({message:'success','Email has been sent ':info.response})
-          // clearDir(__dirname+"/uploads")
   }
 })
 })
