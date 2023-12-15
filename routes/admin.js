@@ -1,6 +1,6 @@
 const express = require('express');
-const multer = require('multer');
-const fs=require('fs');
+// const multer = require('multer');
+// const fs=require('fs');
 // const path = require('path')
 const router = express.Router()
 const collectedData = require('../model/collectedData');
@@ -65,7 +65,7 @@ router.post('/othdata/unreg', tokenVerify, async (req, res) => {
 });
 
 // Multer integration and E-Mail writing
-const uploads = multer({dest:__dirname + "/uploads"})
+// const uploads = multer({dest:__dirname + "/uploads"})
 router.post('/result', tokenVerify,uploads.array("file"),(req, res)=>{
   const mailData= req.body;
   // const fileData =req.files;
