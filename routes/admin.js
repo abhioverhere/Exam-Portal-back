@@ -68,7 +68,9 @@ router.post('/othdata/unreg', tokenVerify, async (req, res) => {
 // const uploads = multer({dest:__dirname + "/uploads"})
 router.post('/result', tokenVerify,(req, res)=>{
   const data= req.body;
+  const mailData= req.body;
   // const fileData =req.files;
+  console.log(mailData)
   let batch = req.body.batch;
   // const attach = fileData.map(file => ({
   //   filename: file.originalname,
