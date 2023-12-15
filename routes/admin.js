@@ -66,7 +66,8 @@ router.post('/othdata/unreg', tokenVerify, async (req, res) => {
 
 // Multer integration and E-Mail writing
 // const uploads = multer({dest:__dirname + "/uploads"})
-router.post('/result', tokenVerify,uploads.array("file"),(req, res)=>{
+// router.post('/result', tokenVerify, uploads.array("file"),(req, res)=>{
+router.post('/result', tokenVerify,(req, res)=>{
   const mailData= req.body;
   // const fileData =req.files;
   let batch = req.body.batch;
