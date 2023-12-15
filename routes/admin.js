@@ -67,7 +67,7 @@ router.post('/othdata/unreg', tokenVerify, async (req, res) => {
 // Multer integration and E-Mail writing
 // const uploads = multer({dest:__dirname + "/uploads"})
 router.post('/result', tokenVerify,(req, res)=>{
-  const mailData= req.body;
+  const data= req.body;
   // const fileData =req.files;
   let batch = req.body.batch;
   // const attach = fileData.map(file => ({
@@ -76,12 +76,12 @@ router.post('/result', tokenVerify,(req, res)=>{
   // }));
   var mailInfo = {
       from: 'ottomailertest@gmail.com',
-      to: mailData.recieverMail,
+      to: data.recieverMail,
       subject: `Test results - ${batch}`,
       html: `<html>
-              <p>${mailData.textAttach}</p><br/>
+              <p>${data.textAttach}</p><br/>
               <p>Please find the attachments/links below:</p><br/><br/>
-              <p>${mailData.resultLink}</p>
+              <p>${data.resultLink}</p>
             </html>`, 
   }
   send.sendMail(mailInfo, function(err, info){      
