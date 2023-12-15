@@ -71,7 +71,7 @@ router.post('/result', tokenVerify, async (req, res)=>{
   const mailData= req.body;
   // const fileData =req.files;
   console.log(mailData)
-  console.log(dataData)
+  console.log(data)
   let batch = req.body.batch;
   // const attach = fileData.map(file => ({
   //   filename: file.originalname,
