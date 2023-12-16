@@ -73,6 +73,12 @@ router.post('/othdata/unreg', tokenVerify, async (req, res) => {
   })
 });
 
+router.post('/othdata/reg', tokenVerify, async (req, res) => {
+  let regList = await regData.find({isElig:true, regComp:true, isAdmin:false}).then((data)=>{
+    res.send(data)
+  })
+});
+
 
 router.post('/deets', tokenVerify, async (req, res) => {
   const regCount = await regData.countDocuments({isAdmin:false, regComp:true})
