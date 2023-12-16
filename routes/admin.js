@@ -5,6 +5,7 @@ const regData = require('../model/student');
 const jwt = require('jsonwebtoken');
 router.use(express.urlencoded({ extended: true }));
 router.use(express.json());
+require('dotenv').config();
 
 //Function to verify adminToken
 function tokenVerify(req,res,next){
@@ -22,11 +23,13 @@ function tokenVerify(req,res,next){
 
 // Setting up Nodemailer
 const nodeM= require('nodemailer');
+const mailId=process.env.mailId;
+const pass=process.env.password;
 const send= nodeM.createTransport({
   service: 'gmail',
   auth:{
-    user: 'ottomailertest@gmail.com',
-    pass: 'taol hrda mqwe vhoo'
+    user: mailId,
+    pass: pass
   }}) 
   
 // Multer integration and E-Mail writing
